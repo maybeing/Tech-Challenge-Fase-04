@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { createContext, useContext, useEffect, useState } from "react";
 import { login as loginApi, logout as logoutApi } from "../services/api";
 
@@ -32,12 +33,29 @@ export function AuthProvider({ children }) {
     setTeacher(null);
   }
 
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
   return (
     <AuthContext.Provider value={{ teacher, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+});
 
 export function useAuth() {
   return useContext(AuthContext);

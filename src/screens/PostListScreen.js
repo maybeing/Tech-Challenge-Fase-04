@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    FlatList,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { getPosts, searchPosts } from "../services/api";
@@ -15,6 +15,7 @@ export default function PostListScreen({ navigation }) {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { teacher } = useAuth();
 
   useEffect(() => {
@@ -23,11 +24,15 @@ export default function PostListScreen({ navigation }) {
 
   async function loadPosts() {
     setLoading(true);
+    setError(null);
     try {
       const data = await getPosts();
       setPosts(data);
     } catch (error) {
       console.error(error);
+      setError(
+        "Não foi possível carregar os posts. Verifique o servidor ou a conexão e tente novamente.",
+      );
     } finally {
       setLoading(false);
     }
@@ -35,9 +40,15 @@ export default function PostListScreen({ navigation }) {
 
   async function handleSearch(text) {
     setSearch(text);
+    setError(null);
     if (text.length > 2) {
-      const data = await searchPosts(text);
-      setPosts(data);
+      try {
+        const data = await searchPosts(text);
+        setPosts(data);
+      } catch (searchError) {
+        console.error(searchError);
+        setError("Erro ao buscar posts. Tente novamente ou limpe a pesquisa.");
+      }
     } else if (text.length === 0) {
       loadPosts();
     }
@@ -65,8 +76,26 @@ export default function PostListScreen({ navigation }) {
         onChangeText={handleSearch}
       />
 
+      {!teacher && (
+        <View style={styles.callToAction}>
+          <TouchableOpacity
+            style={styles.ctaButton}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.ctaButtonText}>Entrar como Admin</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {loading ? (
         <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+      ) : error ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={loadPosts}>
+            <Text style={styles.retryButtonText}>Tentar novamente</Text>
+          </TouchableOpacity>
+        </View>
       ) : (
         <FlatList
           data={posts}
@@ -85,6 +114,17 @@ export default function PostListScreen({ navigation }) {
               </Text>
             </TouchableOpacity>
           )}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                Nenhum post encontrado. Atualize a página ou adicione um post se
+                estiver logado.
+              </Text>
+            </View>
+          }
+          contentContainerStyle={
+            posts.length === 0 ? styles.listEmptyContent : null
+          }
           refreshing={loading}
           onRefresh={loadPosts}
         />
@@ -115,6 +155,21 @@ const styles = StyleSheet.create({
     color: "#007AFF",
     fontSize: 16,
   },
+  callToAction: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  ctaButton: {
+    backgroundColor: "#007AFF",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  ctaButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   search: {
     margin: 16,
     padding: 12,
@@ -122,6 +177,43 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 8,
     backgroundColor: "#fff",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+  errorText: {
+    textAlign: "center",
+    color: "#ff3b30",
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  retryButton: {
+    backgroundColor: "#007AFF",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+  emptyText: {
+    textAlign: "center",
+    color: "#666",
+    fontSize: 16,
+  },
+  listEmptyContent: {
+    flexGrow: 1,
+    justifyContent: "center",
   },
   loader: {
     marginTop: 40,

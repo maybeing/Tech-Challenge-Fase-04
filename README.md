@@ -1,56 +1,94 @@
-# Welcome to your Expo app 👋
+# Blog Mobile - Tech Challenge Fase 4
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+App mobile de blogging desenvolvido em React Native com Expo, integrado a um ecossistema completo de back-end para gestão de postagens, estudantes e professores.
 
-## Get started
+## Tecnologias
 
-1. Install dependencies
+- React Native + Expo SDK 55
+- React Navigation (Native Stack)
+- Axios
+- Context API (Autenticação Global)
+- AsyncStorage
 
+## Funcionalidades
+
+- Listagem e busca de posts em tempo real
+- Leitura de posts detalhados
+- Login de professores com autenticação via JWT
+- Painel Administrativo com restrição de rotas para professores autenticados
+- CRUD completo de posts (exclusivo para professores)
+- CRUD completo de professores e estudantes
+
+---
+
+## 🛠️ Setup do Ecossistema (Passo a Passo)
+
+Para o funcionamento completo do aplicativo, é necessário que o back-end esteja rodando localmente em conjunto com o banco de dados.
+
+### 1. Inicializando o Banco de Dados e o Back-End
+
+O aplicativo consome a API do repositório secundário. Siga os passos abaixo na pasta do seu projeto de back-end (`tech-challenge-blog`):
+
+1. **Iniciar o MongoDB:** Certifique-se de que o Docker Desktop está aberto e rode o comando para subir o contêiner do banco:
    ```bash
-   npm install
+   docker compose up -d
    ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+   Instalar dependências do servidor:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Iniciar a API:
 
-### Other setup steps
+```bash
+npm start
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+O servidor estará rodando na porta 3000 com a documentação ativa em http://localhost:3000/api-docs.
 
-## Learn more
+2. Inicializando o Front-End Mobile (Este Repositório)
+   Após garantir que a API está respondendo com sucesso na porta 3000, inicialize o aplicativo:
 
-To learn more about developing your project with Expo, look at the following resources:
+Instale as dependências:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Bash
+npm install
+Inicie o Expo limpando o cache para evitar conflitos de rotas:
 
-## Join the community
+Bash
+npx expo start -c
+Pressione a tecla w no teclado para abrir o aplicativo diretamente no navegador Web (platform=web), ou escaneie o QR Code com o aplicativo Expo Go no celular (neste caso, lembre-se de ajustar a URL base no arquivo src/services/api.js para o IP da sua máquina).
 
-Join our community of developers creating universal apps.
+🔐 Como Criar o Primeiro Professor (Para Testes de Login)
+O banco de dados inicializa limpo. Para conseguir logar como professor e acessar o painel administrativo para criar ou editar postagens, você pode cadastrar um usuário rapidamente de duas formas:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Opção A: Pela Interface do Swagger (Recomendado 🚀)
+A API conta com documentação OpenAPI 3.0 ativa. É a forma mais rápida de injetar um usuário:
+
+Acesse http://localhost:3000/api-docs no seu navegador.
+
+Expanda a aba Professores e clique no endpoint POST /teachers.
+
+Clique em Try it out.
+
+Edite os campos do JSON de exemplo com o e-mail e senha de sua preferência (ex: professor@fiap.com.br e senha123).
+
+Clique em Execute. Se retornar o status 201, o usuário foi criado com sucesso.
+
+Opção B: Via Postman / Insomnia
+Caso prefira, faça uma requisição manual para a API:
+
+Método: POST
+
+URL: http://localhost:3000/teachers
+
+Body (JSON):
+
+JSON
+{
+"nome": "Professor Avaliador",
+"email": "professor@fiap.com.br",
+"senha": "senha123"
+}
+Após criar o usuário por qualquer um dos métodos acima, utilize as mesmas credenciais na tela de Acesso de Professor dentro do app mobile para liberar os recursos do painel administrativo.

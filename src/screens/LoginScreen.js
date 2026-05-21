@@ -1,12 +1,12 @@
 import { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
@@ -24,6 +24,10 @@ export default function LoginScreen({ navigation }) {
     setLoading(true);
     try {
       await login(email, senha);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "PostList" }],
+      });
     } catch (error) {
       Alert.alert("Erro", "Email ou senha inválidos");
     } finally {
@@ -52,6 +56,10 @@ export default function LoginScreen({ navigation }) {
         onChangeText={setSenha}
         secureTextEntry
       />
+
+      <Text style={styles.hint}>
+        Caso o servidor esteja offline, use admin@blog.com / 123456.
+      </Text>
 
       <TouchableOpacity
         style={styles.button}
@@ -110,6 +118,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  hint: {
+    fontSize: 12,
+    color: "#555",
+    textAlign: "center",
+    marginBottom: 12,
   },
   link: {
     textAlign: "center",

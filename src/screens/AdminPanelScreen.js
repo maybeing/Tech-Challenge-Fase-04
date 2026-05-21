@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { deletePost, getPosts } from "../services/api";
@@ -17,9 +17,14 @@ export default function AdminPanelScreen({ navigation }) {
   const { teacher, logout } = useAuth();
 
   useEffect(() => {
+    if (!teacher) {
+      navigation.replace("Login");
+      return;
+    }
+
     const unsubscribe = navigation.addListener("focus", loadPosts);
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, teacher]);
 
   async function loadPosts() {
     setLoading(true);
@@ -141,6 +146,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 4,
   },
   headerButtons: {
     flexDirection: "row",

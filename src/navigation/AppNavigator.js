@@ -1,4 +1,3 @@
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "../context/AuthContext";
 import AdminPanelScreen from "../screens/AdminPanelScreen";
@@ -20,76 +19,71 @@ export default function AppNavigator() {
   const { teacher } = useAuth();
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="PostList">
-        {/* Telas públicas */}
-        <Stack.Screen
-          name="PostList"
-          component={PostListScreen}
-          options={{ title: "Blog" }}
-        />
-        <Stack.Screen
-          name="PostDetail"
-          component={PostDetailScreen}
-          options={{ title: "Post" }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ title: "Login" }}
-        />
-
-        {/* Telas de professor autenticado */}
-        {teacher && (
-          <>
-            <Stack.Screen
-              name="AdminPanel"
-              component={AdminPanelScreen}
-              options={{ title: "Painel Admin" }}
-            />
-            <Stack.Screen
-              name="CreatePost"
-              component={CreatePostScreen}
-              options={{ title: "Novo Post" }}
-            />
-            <Stack.Screen
-              name="EditPost"
-              component={EditPostScreen}
-              options={{ title: "Editar Post" }}
-            />
-            <Stack.Screen
-              name="TeacherList"
-              component={TeacherListScreen}
-              options={{ title: "Professores" }}
-            />
-            <Stack.Screen
-              name="CreateTeacher"
-              component={CreateTeacherScreen}
-              options={{ title: "Novo Professor" }}
-            />
-            <Stack.Screen
-              name="EditTeacher"
-              component={EditTeacherScreen}
-              options={{ title: "Editar Professor" }}
-            />
-            <Stack.Screen
-              name="StudentList"
-              component={StudentListScreen}
-              options={{ title: "Estudantes" }}
-            />
-            <Stack.Screen
-              name="CreateStudent"
-              component={CreateStudentScreen}
-              options={{ title: "Novo Estudante" }}
-            />
-            <Stack.Screen
-              name="EditStudent"
-              component={EditStudentScreen}
-              options={{ title: "Editar Estudante" }}
-            />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator initialRouteName="PostList">
+      <Stack.Screen
+        name="PostList"
+        component={PostListScreen}
+        options={{ title: "Blog" }}
+      />
+      <Stack.Screen
+        name="PostDetail"
+        component={PostDetailScreen}
+        options={{ title: "Post" }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ title: "Login" }}
+      />
+      {teacher && (
+        <>
+          <Stack.Screen
+            name="AdminPanel"
+            component={AdminPanelScreen}
+            options={{ title: "Painel Admin" }}
+          />
+          <Stack.Screen
+            name="CreatePost"
+            component={CreatePostScreen}
+            options={{ title: "Novo Post" }}
+          />
+          <Stack.Screen
+            name="EditPost"
+            component={EditPostScreen}
+            options={{ title: "Editar Post" }}
+          />
+          <Stack.Screen
+            name="TeacherList"
+            component={TeacherListScreen}
+            options={{ title: "Professores" }}
+          />
+          <Stack.Screen
+            name="CreateTeacher"
+            component={CreateTeacherScreen}
+            options={{ title: "Novo Professor" }}
+          />
+          <Stack.Screen
+            name="EditTeacher"
+            component={EditTeacherScreen}
+            options={{ title: "Editar Professor" }}
+          />
+          <Stack.Screen
+            name="StudentList"
+            component={StudentListScreen}
+            options={{ title: "Estudantes" }}
+          />
+          <Stack.Screen
+            name="CreateStudent"
+            component={CreateStudentScreen}
+            options={{ title: "Novo Estudante" }}
+          />
+          <Stack.Screen
+            name="EditStudent"
+            component={EditStudentScreen}
+            options={{ title: "Editar Estudante" }}
+          />
+        </>
+      )}
+    </Stack.Navigator>
   );
 }
